@@ -18,30 +18,44 @@ def load_model(model_path, config):
 
 def sample_from_logits(logits, temp=1.0):
     # logits = top_k_logits(logits, top_k)
-    probabilities = F.softmax(logits / temp, dim=-1)
-    next_token = torch.multinomial(probabilities, 1, replacement=True)
+    # Greedy selection: choose the token with highest score (argmax).
+    # Preserve the (B, 1) shape so callers expecting a column vector continue to work.
+    scaled = logits / (temp if temp != 0 else 1.0)
+    next_token = torch.argmax(scaled, dim=-1, keepdim=True)
     return next_token
 
 
 def generate_sample(model, tokenizer, conditions, max_length):
     model.eval()
     input_ids = tokenizer.generation_encode(conditions)
-    input_ids = torch.tensor([input_ids], dtype=torch.long).cuda()
+    # place input on the same device as the model
+    device = next(model.parameters()).device
+    input_ids = torch.tensor([input_ids], dtype=torch.long).to(device)
     len_conditions = len(input_ids[0])
 
     with torch.no_grad():
         for _ in range(max_length - len_conditions):
 
-            # Generate one token at a time, and append it to the input to do generation iteratively until </s> is generated
-            # hint: use the "sample_from_logits" function to sample the next token based on model's output (logits)
-            ### YOUR CODE HERE ###
-
-            # hint: uncomment the following finishing conditions
-            # if next_token.item() == tokenizer.vocab["</s>"] or next_token.item() == tokenizer.vocab["<pad>"]:
-            #     break
-            ### YOUR CODE HERE ###
+            # 1. Forward pass to get logits
+            # We pass the current input_ids.
+            # The model returns (logits, loss, attn_maps). We only need logits.
+            logits, _, _ = model(input_ids)
             
-            pass # Comment this line after you implemented your code
+            # 2. Get logits for the last token only
+            # logits shape is (Batch, Sequence_Length, Vocab_Size)
+            # We want the last step: logits[:, -1, :]
+            next_token_logits = logits[:, -1, :]
+
+            # 3. Sample the next token
+            next_token = sample_from_logits(next_token_logits)
+
+            # 4. Append the new token to the sequence
+            input_ids = torch.cat((input_ids, next_token), dim=1)
+
+            # 5. Check stopping conditions
+            # 2 is </s> (EOS), 0 is <pad>
+            if next_token.item() == tokenizer.vocab["</s>"] or next_token.item() == tokenizer.vocab["<pad>"]:
+                break
 
 
     generated_text = tokenizer.decode(input_ids[0][len_conditions:])
