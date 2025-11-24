@@ -1,0 +1,56 @@
+(.venv) root@MSI:/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5# python main.py --task train --run_name hw5_test
+Downloading builder script: 100%|██████████████████████████████████████████████████████████████████████████████| 4.58k/4.58k [00:00<00:00, 30.4kB/s]
+Downloading readme: 100%|██████████████████████████████████████████████████████████████████████████████████████| 10.9k/10.9k [00:00<00:00, 81.6kB/s]
+Downloading data: 3.27MB [00:00, 50.3MB/s]                                                                                                          
+Downloading data: 812kB [00:00, 21.4MB/s]                                                                                                           
+Generating train split: 100%|███████████████████████████████████████████████████████████████████████| 16728/16728 [00:00<00:00, 53272.65 examples/s]
+Generating test split: 100%|██████████████████████████████████████████████████████████████████████████| 4182/4182 [00:00<00:00, 82915.36 examples/s]
+Building tokenizer at ./tokenizer/simple_vocab.json.
+Building tokenizer for actions: 100%|██████████████████████████████████████████████████████████████████████| 16728/16728 [00:00<00:00, 72382.13it/s]
+Building tokenizer for commands: 100%|█████████████████████████████████████████████████████████████████████| 16728/16728 [00:00<00:00, 79633.62it/s]
+tokenizer saved
+{'<pad>': 0, '<s>': 1, '</s>': 2, '<unk>': 3, 'I_TURN_RIGHT': 4, 'I_JUMP': 5, 'I_WALK': 6, 'I_TURN_LEFT': 7, 'I_RUN': 8, 'I_LOOK': 9, 'jump': 10, 'opposite': 11, 'right': 12, 'twice': 13, 'and': 14, 'turn': 15, 'thrice': 16, 'run': 17, 'left': 18, 'after': 19, 'walk': 20, 'around': 21, 'look': 22}
+train dataset size: 15055
+val dataset size: 1673
+loading model
+total params: 9408
+/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/trainer.py:79: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = GradScaler()
+epoch 1 iter 0: train loss 0.00000. lr 0.0000e+00:   0%|                                                                    | 0/471 [00:00<?, ?it/s]/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/trainer.py:102: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast():
+epoch 1 iter 0: train loss 0.00000. lr 0.0000e+00:   0%|                                                                    | 0/471 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/main.py", line 64, in <module>
+    train(args)
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/train.py", line 45, in train
+    trainer.train()
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/trainer.py", line 151, in train
+    train_loss = run_epoch('train')
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/trainer.py", line 104, in run_epoch
+    logits, loss, _ = model(input_ids, targets=targets, condition_split_id=condition_split_id)
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/.venv/lib/python3.10/site-packages/torch/nn/parallel/data_parallel.py", line 192, in forward
+    return self.module(*inputs[0], **module_kwargs[0])
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/model.py", line 167, in forward
+    x, attn = layer(x)
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/model.py", line 80, in forward
+    y, attn = self.attn(self.ln1(x))
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/.venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5/model.py", line 52, in forward
+    attn_save = att
+UnboundLocalError: local variable 'att' referenced before assignment
+(.venv) root@MSI:/mnt/c/Daniel 2.0/Junior Year of 25-26/Fall 2025/CSCE 421/hw5# 

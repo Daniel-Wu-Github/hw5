@@ -1,0 +1,31 @@
+Part 4(a) — Tokenizer & Data Analysis Deliverables
+
+1) Tokenizer Definition:
+A tokenizer maps raw text to integer token IDs and back. It handles special tokens (here: `<pad>`, `<s>`, `</s>`, `<unk>`), assigns each distinct token (word) a unique integer index, and provides encoding/decoding utilities and batching helpers used by the model.
+
+2) How this tokenizer processes raw data (Process):
+- Tokenizer implementation: `SimpleTokenizer` in `tokenizer.py`.
+- Vocabulary building: `fit_on_text(text)` splits the input string on whitespace (`text.split()`), and for each word not already in `self.vocab` assigns the next integer id (starting from 4 after the four reserved tokens).
+- Encoding (`encode(text)`): maps each word to its id (unknown words -> `<unk>` id), prepends `<s>` and appends `</s>`, then pads with `<pad>` tokens up to `max_length`. The returned sequence is truncated to `max_length` if necessary.
+- Generation encoding (`generation_encode(text)`): maps words but only prepends the `<s>` token and does NOT append `</s>` (so generation can continue autoregressively).
+- Batch encoding (`batch_encode_plus` / `encode_batch`): encodes a list of texts and also returns attention masks where padding tokens are marked with 0 (pad) and non-pad tokens with 1.
+- Saving/loading: `save_vocab(file_path)` writes the `vocab` dict to JSON; `load_vocab(file_path)` restores `vocab` and builds `reverse_vocab` for decoding.
+
+3) Vocabulary Size (exact integer):
+23
+
+4) Tokenizer file created (from run):
+./tokenizer/simple_vocab.json
+
+5) Vocabulary list (as printed in your console `run_log.txt`):
+{'<pad>': 0, '<s>': 1, '</s>': 2, '<unk>': 3, 'I_TURN_RIGHT': 4, 'I_JUMP': 5, 'I_WALK': 6, 'I_TURN_LEFT': 7, 'I_RUN': 8, 'I_LOOK': 9, 'jump': 10, 'opposite': 11, 'right': 12, 'twice': 13, 'and': 14, 'turn': 15, 'thrice': 16, 'run': 17, 'left': 18, 'after': 19, 'walk': 20, 'around': 21, 'look': 22}
+
+6) Evidence / Where to find console logs and files:
+- Full console run saved to: `run_log.txt` (in repo root).
+- Tokenizer JSON saved to: `./tokenizer/simple_vocab.json` (check that file exists).
+
+7) Notes / Next steps you may want to include in the PDF appendix:
+- A screenshot of the `run_log.txt` lines showing `tokenizer saved` and the printed vocab dict (these lines appear near the start of the log). Save that screenshot in your report appendix.
+- In the PDF: paste the exact vocab size number `23`, the small paragraph above for the Tokenizer Definition, and the code snippets from `tokenizer.py` for `fit_on_text` and `encode` as evidence of the processing behavior.
+
+----- End of deliverables for Part 4(a)

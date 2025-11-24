@@ -11,7 +11,7 @@ from trainer import Trainer, TrainerConfig
 def train(args):
 
     # --- load dataset ---
-    data_SCAN = load_dataset("scan", args.data_split)
+    data_SCAN = load_dataset("scan", args.data_split, trust_remote_code=True)
 
     max_len = args.max_len
     tokenizer, vocab_size = build_tokenizer(args, data_SCAN, max_len, args.output_tokenizer_dir)

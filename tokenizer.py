@@ -43,7 +43,7 @@ class SimpleTokenizer:
         self.vocab = {"<pad>": 0, "<s>": 1, "</s>": 2, "<unk>": 3}
         self.count = 4
         self.max_length = max_length
-        self.token_decoder_func = np.vectorize(self.token_decode)
+        self.token_decoder_func = np.vectorize(self.token_decode, otypes=[str])
 
     def fit_on_file(self, file_path):
         with open(file_path, 'r', encoding='utf-8') as file:
