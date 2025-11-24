@@ -39,13 +39,30 @@ class CSABlock(nn.Module):
 
         # Q, K, V for all heads
         ### YOUR CODE HERE ###
+        # Calculate Query, Key, Value
+        k = self.K_proj(x)
+        q = self.Q_proj(x)
+        v = self.V_proj(x)
+
+        # Reshape for multi-head attention: (B, L, n_head, head_dim) -> (B, n_head, L, head_dim)
+        head_dim = C // self.n_head
+        k = k.view(B, L, self.n_head, head_dim).transpose(1, 2)
+        q = q.view(B, L, self.n_head, head_dim).transpose(1, 2)
+        v = v.view(B, L, self.n_head, head_dim).transpose(1, 2)
 
         ### YOUR CODE HERE ###
 
         # Causal self-attention
         # hint: apply causal mask by using the PyTorch function "masked_fill" with value float('-inf') on attention scores, then apply softmax
         ### YOUR CODE HERE ###
+        # 1. Scaled dot-product attention
+        att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
 
+        # 2. Apply causal mask (prevent attention to future positions)
+        att = att.masked_fill(self.mask[:, :, :L, :L] == 0, float('-inf'))
+
+        # 3. Softmax to get attention probabilities
+        att = F.softmax(att, dim=-1)
 
         ### YOUR CODE HERE ###
 
@@ -55,6 +72,11 @@ class CSABlock(nn.Module):
 
         # Apply the attention to the values; Combine all head outputs
         ### YOUR CODE HERE ###
+        # 4. Weighted sum of values
+        y = att @ v
+
+        # 5. Reassemble heads: (B, H, L, D) -> (B, L, H, D) -> (B, L, C)
+        y = y.transpose(1, 2).contiguous().view(B, L, C)
 
         ### YOUR CODE HERE ###
 
